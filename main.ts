@@ -126,7 +126,7 @@ export function main(argv?: string[]): Promise<number> {
 							match(
 								options.format || 'text',
 								options.template,
-								options.columns || `[${pal.name}][${pal.name}:d][${pal.name}:e]`,
+								options.columns || `[${pal.name}]rxl[${pal.name}:e]`,
 								pal,
 								options.count || pal.length,
 								options.delta || +Infinity,
