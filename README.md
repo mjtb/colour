@@ -1,4 +1,4 @@
-# mjtb-colour
+﻿# mjtb-colour
 
 Converts colours between various colour spaces.
 
@@ -10,7 +10,7 @@ Redistributable under a permissive (MIT) open source license. See the
 
 ## About this package
 
-The `mjtb-colours` package exports classes (written in TypeScript) that
+The `mjtb-colour` package exports classes (written in TypeScript) that
 convert colours between various colour spaces:
 
 *	[sRGB](https://en.wikipedia.org/wiki/SRGB) _\(what we usually mean
@@ -245,7 +245,7 @@ colour match -c "[css]x[r:e]l" -n 5 css "lab(80 40 80)"
 
 This section provides a brief overview of how to use the classes in
 this package. Full JSDoc API documentation is available on the
-mjtb-colours [wiki](https://mjtb.github.io/colours#wiki) on GitHub.
+mjtb-colour [wiki](https://mjtb.github.io/colours#wiki) on GitHub.
 
 The examples given in this section are available in the `examples.js`
 file in the source distribution. You can run them directly using
@@ -277,7 +277,7 @@ use colour space when specifying a colour to either `Colours.parseString`
 or `Palettes.parseString`.
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex2_Colour_parseString() {
 	console.log("== EXAMPLE #2: Colour.parseString ==");
@@ -302,7 +302,7 @@ the colour space-specific class, not the `Colour` wrapper class.
 
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex3_SpaceSpecific_parseString() {
 	console.log("== EXAMPLE #3: Colour space-specific parseString ==");
@@ -323,7 +323,7 @@ Note that you cannot directly compare across colour spaces without
 conversion:
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex4_SpaceSpecific_equalTo() {
 	console.log("== EXAMPLE #4: Colour space-specific equalTo ==");
@@ -346,7 +346,7 @@ natural range e.g., \[0,255\] for RGB, \[0,360\) for HSL-Hue,
 use natural range components exclusively.\)
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex5_Normalized_and_natural_properties() {
 	console.log("== EXAMPLE #5: Normalized and natural properties ==");
@@ -368,7 +368,7 @@ Create instances of colour space objects with their **normalized**
 component values:
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex6_SpaceSpecific_constructors() {
 	console.log("== EXAMPLE #6: Colour space-specific constructors ==");
@@ -398,7 +398,7 @@ the `true` argument to force output using percentages, which are rounded
 to 2 decimal digits of precision.
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex7_RGB_toString_behaviour() {
 	console.log("== EXAMPLE #7: RGB.toString behaviour ==");
@@ -439,7 +439,7 @@ it was loaded from a palette, otherwise it will return the `toString`
 of the colour space from whence it was constructed. For example:
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex8_Colour_toString_behaviour() {
 	console.log("== EXAMPLE #8: Colour.toString behaviour ==");
@@ -592,7 +592,7 @@ limit the maximum allowed ΔE*₀₀ for matches; by default, there is no
 limit on the maximum allowed ΔE*₀₀.
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex9_Palette_matching() {
 	console.log("== EXAMPLE #9: Palette matching ==");
@@ -655,7 +655,7 @@ The following example demonstrates round-trip conversions from LCH to
 HSL colour space \(which are pretty much the maximum case\).
 
 ```javascript
-const colour = require('mjtb-colours');
+const colour = require('mjtb-colour');
 
 function ex10_Colour_space_convertibility() {
 	console.log("== EXAMPLE #10: Colour space convertibility ==");

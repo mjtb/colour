@@ -1,4 +1,4 @@
-/* mjtb-colour - Converts colours between various colour spaces.
+﻿/* mjtb-colour - Converts colours between various colour spaces.
  * Copyright (C) 2017 Michael Trenholm-Boyle. Licensed under a
  * permissive (MIT) license. See the LICENSE file at the repository
  * root for full license text.
@@ -559,14 +559,14 @@ export default class Palettes {
 			return -1;
 		}
 	}
-	/** Returns the location of the user’s palette directory, $HOME/.mjtb-colours
-	  * @return {string} $HOME/.mjtb-colours
+	/** Returns the location of the user’s palette directory, $HOME/.mjtb-colour
+	  * @return {string} $HOME/.mjtb-colour
 	  */
 	public static get userPaletteDir(): string {
 		if(process.platform === 'win32') {
-			return path.resolve(process.env['USERPROFILE'], '.mjtb-colours');
+			return path.resolve(process.env['USERPROFILE'], '.mjtb-colour');
 		} else {
-			return path.resolve(process.env['HOME'], '.mjtb-colours');
+			return path.resolve(process.env['HOME'], '.mjtb-colour');
 		}
 	}
 	private static collectPaletteFiles(dirs: string[], paletteFiles: string[], resolve: any, reject: any) {
