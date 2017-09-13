@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+/* mjtb-colour - Converts colours between various colour spaces.
+ * Copyright (C) 2017 Michael Trenholm-Boyle. Licensed under a
+ * permissive (MIT) license. See the LICENSE file at the repository
+ * root for full license text.
+ */
+const program = require('../lib/main.js');
+program.main(process.argv).then((ec) => {
+	process.exit(ec);
+}).catch((err) => {
+	console.error(err);
+	process.exit(1);
+});

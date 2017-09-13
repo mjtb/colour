@@ -1,0 +1,48 @@
+//-
+	mjtb-colour - Converts colours between various colour spaces.
+	Copyright (C) 2017 Michael Trenholm-Boyle. Licensed under a
+	permissive (MIT) license. See the LICENSE file at the repository
+	root for full license text.
+doctype html
+html
+	head
+		title= "Colours"
+		meta(charset="utf8")
+		style.
+			body {
+				font-family: sans-serif;
+				font-size: 9pt;
+			}
+			span.swatch {
+				display: inline-block;
+				min-width: 1em;
+				min-height: 1em;
+				box-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+			}
+			table {
+				border-collapse: collapse;
+			}
+			thead {
+				color: white;
+				background-color: black;
+			}
+			th, td {
+				border: 1px solid silver;
+			}
+	body
+		h1 Colours
+		table
+			thead
+				tr
+					each h in headers
+						th #{h}
+			tbody
+				each row in content
+					tr
+						each c in row
+							if c.swatch
+								td.
+									<span class="swatch" style="background-color:#{c.text}">&nbsp;</span>
+									#{c.text}
+							else
+								td #{c.text}

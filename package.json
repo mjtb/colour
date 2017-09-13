@@ -1,0 +1,51 @@
+{
+  "name": "mjtb-colour",
+  "version": "1.0.0",
+  "description": "Converts colours between various colour spaces",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "gulp",
+    "test": "nyc jasmine",
+    "examples": "node examples.js"
+  },
+  "bin": {
+    "colour": "./bin/colour"
+  },
+  "man": [
+    "./man/colour.1"
+  ],
+  "files": [
+    "*.ts",
+    "template.pug",
+    "lib",
+    "bin",
+    "man"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjtb/colour.git"
+  },
+  "author": "Michael Trenholm-Boyle (michael_john_boyle@hotmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mjtb/colour/issues"
+  },
+  "homepage": "https://github.com/mjtb/colour",
+  "devDependencies": {
+    "@types/commander": "^2.9.2",
+    "@types/jasmine": "^2.5.54",
+    "@types/pug": "^2.0.4",
+    "gulp": "^3.9.1",
+    "gulp-jasmine": "^2.4.2",
+    "gulp-jsdoc3": "^1.0.1",
+    "gulp-typescript": "^3.2.2",
+    "jasmine": "^2.8.0",
+    "jsdoc": "^3.5.4",
+    "nyc": "^11.2.1",
+    "typescript": "^2.4.2"
+  },
+  "dependencies": {
+    "commander": "^2.11.0",
+    "pug": "^2.0.0-rc.4"
+  }
+}

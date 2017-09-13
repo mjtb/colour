@@ -1,0 +1,33 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"outDir": "./lib/",
+		"noImplicitAny": true,
+		"noImplicitThis": true,
+		"sourceMap": true,
+		"strictNullChecks": true,
+		"module": "commonjs",
+		"target": "es6"
+	},
+	"files": [
+		"index.ts",
+		"main.ts",
+		"dataset.ts",
+		"component.ts",
+		"rgb.ts",
+		"linear.ts",
+		"hsl.ts",
+		"matrix3x3.ts",
+		"xyz.ts",
+		"lab.ts",
+		"hwb.ts",
+		"lch.ts",
+		"yuv.ts",
+		"ycc.ts",
+		"match.ts",
+		"colour.ts",
+		"palette.ts",
+		"palettes.ts",
+		"spec/**/*.ts"
+	]
+}

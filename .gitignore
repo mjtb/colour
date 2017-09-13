@@ -1,0 +1,7 @@
+node_modules/
+lib/
+docs/
+mjtb-colour-*.tgz
+.nyc_output/
+*.palette
+coverage/

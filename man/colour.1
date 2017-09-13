@@ -1,0 +1,174 @@
+.TH COLOUR 1
+.SH NAME
+colour \- converts colours betwen various colour spaces
+.SH SYNOPSIS
+.B colour
+.I [options]
+.I command
+.I arguments…
+.SH DESCRIPTION
+.B colour
+is a command-line interface for working with colours. It lets you
+convert colours between different colour spaces, match colours to those
+in standard and user-defined palettes and get information about colours.
+The following colour spaces are supported:
+.HP
+*
+.B RGB
+(more precisely, sRGB)
+.HP
+*
+.B HSL
+(Hue-Saturation-Lightness)
+.HP
+*
+.B HWB
+(Hue-Whiteness-Blackness)
+.HP
+*
+.B Linear
+RGB (i.e., CIE RGB with a D65 illuminant)
+.HP
+*
+.B XYZ
+(assumes D65 illuminant)
+.HP
+*
+.B LAB
+(more precisely, CIE L*a*b* with D50 illuminant)
+.HP
+*
+.B LCH
+(more precisely, CIE L*C*h° with D50 illuminant)
+.HP
+*
+.B YUV
+(more precisely, ITU-T T.871 Y'CbCr used in JPEG)
+.HP
+*
+.B YCC
+(more precisely, ITU-R BT.2020 linear Yc'CbcCrc)
+.P
+The only palette provided built-in is the
+.BR css
+standard palette defined by W3C CSS Level 4 Color Module named colours
+list, but users can define their own palettes using a JSON schema.
+.P
+Information about the colours specified or matched is printed to stdout
+in a tabular format. By default, the table is formatted in plain
+.B text
+acording to the GitHub-flavoured Markdown table syntax. You can choose
+to instead format the output as an
+.B html
+file, a
+.B csv
+(Comma-separated Values) file, a
+.B json
+formatted array, or in a
+.B flat
+(i.e., not tabular) plain-text format.
+.P
+By default, the following pieces of information (
+.I columns
+) are output though it is possible to customize this list with a
+command-line option.
+.HP
+*
+.BR r
+— rgb(r,g,b) sRGB components as decimal integers in the range 0..255
+.HP
+*
+.BR p
+— rgb(r%,g%,b%) sRGB components as floating-point numbers in the range
+0..100
+.HP
+*
+.BR x
+— #rrggbb (or #rgb, if compatible) hexadecimal notation of an sRGB
+colour
+.HP
+*
+.BR l
+— lab(l a b) CIE L*a*b* components as floating-point numbers
+.SH GENERAL OPTIONS
+.TP
+.IR -f, --format " " text|html|flat|csv|json
+.IP
+Specifies the output format
+.TP
+.IR -c, --columns " " *|columns…
+.IP
+Specifies which pieces of information (columns) will be included in the
+output
+.TP
+.IR -p, --palette " " file
+.IP
+Specifies a palette JSON file to reference
+.TP
+.IR -t, --template " " file
+.IP
+Specifies a Pug template for formatting tables as HTML
+.SH COMMANDS
+.TP
+.BR columns
+Print a list of the columns names that can be specified as the argument
+to the
+.BR --columns
+option.
+.TP
+.BR convert " " colours…
+Print information about the specified colours.
+.TP
+.BR match " " palette " " colours…
+Match the colours specified to those in the given palette.
+.IP
+There are two additional options that control matching:
+.IP
+.B -c,--count
+.I <int>
+.IP
+limits the total number of matches reported. By default, only
+the best match for a colour is reported. Setting this option to e.g., 3
+will otuput the top 3 matches.
+.IP
+.B -e,--delta
+.I <float>
+.IP
+limits how different a colour may be in order to be considered
+“matching” by giving the maximum ΔE*₀₀ colour difference value allowed.
+Lower ΔE*₀₀ values indicate more perceptually similar colours: the
+just-noticeable-difference threshold value is ΔE*₀₀ < 2.3.
+By default, the best match(es) are reported no matter how large ΔE*₀₀ is.
+.SH EXIT STATUS
+.TP
+.BR 0
+Printed information about one or more colours.
+.TP
+.BR 1
+An exception occurred: check the syntax of the colours you specified
+or the palette JSON files or Pug templates specified.
+.SH EXAMPLE
+The following example shows the default output for finding a couple of
+colours:
+.P
+.B colour convert
+.I aliceblue #aabbcc "hsl(300,100%,20%)"
+.P
+.BD
+| sRGB             | sRGB (%)                | sRGB (Hex) | L*a*b*                  |
+|:-----------------|:------------------------|:-----------|:------------------------|
+| rgb(240,248,255) | rgb(94.12%,97.25%,100%) | #f0f8ff    | lab(97.12 -1.77 -4.36)  |
+| rgb(170,187,204) | rgb(66.67%,73.33%,80%)  | #abc       | lab(74.97 -3.4 -10.72)  |
+| rgb(102,0,102)   | rgb(40%,0%,40%)         | #606       | lab(22.87 47.74 -30.88) |
+.ED
+.P
+.B colour match
+.I -c 'lr[r:e][css][css:e]' -n 3 css 'lab(50 15 -75)'
+.P
+.BD
+| L*a*b*                  | sRGB            | ΔE*₀₀ (RGB) | CSS        | ΔE*₀₀ (CSS) |
+|:------------------------|:----------------|:------------|:-----------|:------------|
+| lab(46.8 17.79 -66.68)  | rgb(65,105,225) | 5.677       | royalblue  | 5.677       |
+| lab(51.99 -8.36 -32.85) | rgb(70,130,180) | 8.018       | steelblue  | 8.018       |
+| lab(58.36 0.89 -64.8)   | rgb(30,144,255) | 9.969       | dodgerblue | 9.969       |
+.ED
