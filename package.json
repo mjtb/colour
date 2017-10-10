@@ -1,6 +1,6 @@
 {
   "name": "mjtb-colour",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Converts colours between various colour spaces",
   "main": "lib/index.js",
   "scripts": {
@@ -32,17 +32,17 @@
   },
   "homepage": "https://github.com/mjtb/colour",
   "devDependencies": {
-    "@types/commander": "^2.9.2",
-    "@types/jasmine": "^2.5.54",
+    "@types/commander": "^2.11.0",
+    "@types/jasmine": "^2.6.0",
     "@types/pug": "^2.0.4",
     "gulp": "^3.9.1",
     "gulp-jasmine": "^2.4.2",
     "gulp-jsdoc3": "^1.0.1",
     "gulp-typescript": "^3.2.2",
     "jasmine": "^2.8.0",
-    "jsdoc": "^3.5.4",
+    "jsdoc": "^3.5.5",
     "nyc": "^11.2.1",
-    "typescript": "^2.4.2"
+    "typescript": "^2.5.3"
   },
   "dependencies": {
     "commander": "^2.11.0",
