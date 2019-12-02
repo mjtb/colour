@@ -32,6 +32,7 @@ convert colours between various colour spaces:
 *	[YCC](https://en.wikipedia.org/wiki/YCbCr#ITU-R_BT.2020_conversion)
 	_\(more precisely, the Yc'CbcCrc linear colour space defined by the
 	ITU-R BT.2020 specification\)_
+*   [XYY](https://en.wikipedia.org/wiki/CIE_1931_color_space#CIE_xy_chromaticity_diagram_and_the_CIE_xyY_color_space)
 
 Each colour space is represented by its own class e.g., `RGB`, `HSL`,
 `Linear`, etc. The `Colour` class encapsulates a single colour expressed
@@ -48,13 +49,13 @@ colours to colour palettes.
 
 ## Pre-requisites & dependencies
 
-*	[Node.js 8.4](https://nodejs.org/en/)
-*	[TypeScript 2.5](https://www.typescriptlang.org/)
-*	[Gulp 1.4](https://gulpjs.com/)
-*	[Pug 2.0](https://pugjs.org/)
-*	[Jasmine 2.8](https://jasmine.github.io/)
-*	[Instanbul 11.2](https://istanbul.js.org/)
-*	[Commander](https://www.npmjs.com/package/commander)
+*	[Node.js 12.13.1](https://nodejs.org/en/)
+*	[TypeScript 3.7.2](https://www.typescriptlang.org/)
+*	[Gulp 4.0.2](https://gulpjs.com/)
+*	[Pug 2.0.4](https://pugjs.org/)
+*	[Jasmine 3.5.0](https://jasmine.github.io/)
+*	[Instanbul 14.1.1](https://istanbul.js.org/) _\(for nyc code coverage\)
+*	[Commander 2.20.3](https://www.npmjs.com/package/commander)
 
 
 ## Build & test
@@ -63,7 +64,8 @@ Uses `gulp` as its build system, `jasmine` as it unit test runner and
 `nyc` for code coverage.
 
 ```
-npm build .
+npm install
+npm run-script build
 npm test
 ```
 
