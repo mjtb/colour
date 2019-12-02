@@ -68,6 +68,17 @@ export class DataSet {
 		this.contexts = [];
 		this.inputs = [];
 	}
+	public static preformatted(headers: string[], content: string[][]): DataSet {
+		let ds: DataSet = new DataSet('');
+		let col: string[] = [];
+		for(let h in headers) {
+			col.push('');
+		}
+		ds.columns = col;
+		ds.header = headers;
+		ds.content = content;
+		return ds;
+	}
 	public static isHtmlColourSpec(col: string): boolean {
 		switch(col) {
 			default:

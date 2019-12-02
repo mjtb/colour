@@ -17,6 +17,7 @@ import Linear from './linear';
 import XYZ from './xyz';
 import LAB from './lab';
 import * as ds from './dataset';
+import { stringLiteral } from 'babel-types';
 
 function convert(format: string, template: string|undefined, columns: string, colours: string[]): number {
 	let data: ds.DataSet = new ds.DataSet(columns);
@@ -27,6 +28,29 @@ function convert(format: string, template: string|undefined, columns: string, co
 		}
 		data.push(c, colour);
 	}
+	let formatter: ds.IDataSetFormatter = ds.formatterOf(format, template);
+	console.log(formatter.formatDataSet(data));
+	return 0;
+}
+
+function diff(format: string, template: string|undefined, colours: string[]): number {
+	let headers: string[] = ['A', 'B', '\u0394E*\u2080\u2080' ];
+	let content: string[][] = [];
+	for(let i = 0; i < colours.length; i += 2) {
+		let a: Colour|undefined = Palettes.parseString(colours[i]);
+		if(!a) {
+			throw new Error(`Could not parse ${colours[i]} as a colour`);
+		}
+		let ast: string = (a.name && (a.name.toLowerCase() === colours[i].toLowerCase())) ? a.name : a.defn.toString();
+		let b: Colour|undefined = Palettes.parseString(colours[i+1]);
+		if(!b) {
+			throw new Error(`Could not parse ${colours[i+1]} as a colour`);
+		}
+		let bst: string = (b.name && (b.name.toLowerCase() === colours[i+1].toLowerCase())) ? b.name : b.defn.toString();
+		let c: number = a.lab.deltaE(b.lab);
+		content.push([ ast, bst, Component.formatNumber(c, 1e-3)]);
+	}
+	let data: ds.DataSet = ds.DataSet.preformatted(headers, content);
 	let formatter: ds.IDataSetFormatter = ds.formatterOf(format, template);
 	console.log(formatter.formatDataSet(data));
 	return 0;
@@ -155,6 +179,21 @@ export function main(argv?: string[]): Promise<number> {
 					reject(err)
 				});
 			 });
+		commander
+			.command('diff [colours...]')
+			.description('Prints the difference between colours')
+			.action(function(...args: any[]): void {
+				cmd = 'diff';
+				let options: any = args[args.length - 1].parent;
+				if(options.palette) {
+					Palettes.add(Palette.parseJsonFileSync(path.resolve(process.cwd(), options.palette)));
+				}
+				Palettes.loadUserPalettes().then((palettes: Palette[]) => {
+					resolve(diff(options.format || 'text', options.template, args[0]));
+				}).catch((err: any): void => {
+					reject(err)
+				});
+			});
 		commander
 			.parse(argv || process.argv);
 		if(!cmd) {
