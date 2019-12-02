@@ -12,6 +12,7 @@ import HWB from './hwb';
 import LCH from './lch';
 import YUV from './yuv';
 import YCC from './ycc';
+import XYY from './xyy';
 import Palette from './palette';
 import Palettes from './palettes';
 
@@ -37,10 +38,12 @@ export default class Colour {
 	public readonly yuv: YUV;
 	/** ITU-R BT.2020 (UDHTV) constant luminance Yc'CbcCrc components of this colour */
 	public readonly ycc: YCC;
+	/** XYY components of this colour */
+	public readonly xyy: XYY;
 	/** Name of the colour space or palette used to initialize this colour */
 	public readonly space: string;
 	/** The object that was used ot initialize the colour */
-	public readonly defn: RGB|Linear|HSL|XYZ|LAB|HWB|LCH|YUV|YCC;
+	public readonly defn: RGB|Linear|HSL|XYZ|LAB|HWB|LCH|YUV|YCC|XYY;
 	/** Constructs the object given a colour space value and an optional name
 	  * @param {any} c - colour space value in RGB (or other) format
 	  * @param {string}
@@ -64,6 +67,7 @@ export default class Colour {
 			this.lch = LCH.fromLAB(this.lab);
 			this.yuv = YUV.fromLinear(this.lin);
 			this.ycc = YCC.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
 			if(!space) {
 				this.space = 'RGB';
 			}
@@ -77,6 +81,7 @@ export default class Colour {
 			this.lch = LCH.fromLAB(this.lab);
 			this.yuv = YUV.fromLinear(this.lin);
 			this.ycc = YCC.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
 			if(!space) {
 				this.space = 'Linear';
 			}
@@ -90,6 +95,7 @@ export default class Colour {
 			this.lch = LCH.fromLAB(this.lab);
 			this.yuv = YUV.fromLinear(this.lin);
 			this.ycc = YCC.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
 			if(!space) {
 				this.space = 'HSL';
 			}
@@ -103,6 +109,7 @@ export default class Colour {
 			this.lch = LCH.fromLAB(this.lab);
 			this.yuv = YUV.fromLinear(this.lin);
 			this.ycc = YCC.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
 			if(!space) {
 				this.space = 'XYZ';
 			}
@@ -116,6 +123,7 @@ export default class Colour {
 			this.lch = LCH.fromLAB(this.lab);
 			this.yuv = YUV.fromLinear(this.lin);
 			this.ycc = YCC.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
 			if(!space) {
 				this.space = 'LAB';
 			}
@@ -129,6 +137,7 @@ export default class Colour {
 			this.lch = LCH.fromLAB(this.lab);
 			this.yuv = YUV.fromLinear(this.lin);
 			this.ycc = YCC.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
 			if(!space) {
 				this.space = 'HWB';
 			}
@@ -142,6 +151,7 @@ export default class Colour {
 			this.hwb = HWB.fromRGB(this.rgb);
 			this.yuv = YUV.fromLinear(this.lin);
 			this.ycc = YCC.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
 			if(!space) {
 				this.space = 'LCH';
 			}
@@ -155,6 +165,7 @@ export default class Colour {
 			this.hwb = HWB.fromRGB(this.rgb);
 			this.lch = LCH.fromLAB(this.lab);
 			this.ycc = YCC.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
 			if(!space) {
 				this.space = 'YUV';
 			}
@@ -164,6 +175,20 @@ export default class Colour {
 			this.rgb = this.lin.toRGB();
 			this.hsl = HSL.fromRGB(this.rgb);
 			this.xyz = XYZ.fromLinear(this.lin);
+			this.lab = LAB.fromXYZ(this.xyz);
+			this.hwb = HWB.fromRGB(this.rgb);
+			this.lch = LCH.fromLAB(this.lab);
+			this.yuv = YUV.fromLinear(this.lin);
+			this.xyy = XYY.fromXYZ(this.xyz);
+			if(!space) {
+				this.space = 'YCC';
+			}
+		} else if(c instanceof XYY) {
+			this.xyy = c;
+			this.xyz = this.xyy.toXYZ();
+			this.lin = this.xyz.toLinear();
+			this.rgb = this.lin.toRGB();
+			this.hsl = HSL.fromRGB(this.rgb);
 			this.lab = LAB.fromXYZ(this.xyz);
 			this.hwb = HWB.fromRGB(this.rgb);
 			this.lch = LCH.fromLAB(this.lab);
@@ -235,6 +260,10 @@ export default class Colour {
 			return c;
 		}
 		c = YCC.parseString(colour);
+		if(c) {
+			return c;
+		}
+		c = XYY.parseString(colour);
 		if(c) {
 			return c;
 		}

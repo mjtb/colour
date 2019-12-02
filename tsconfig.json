@@ -24,6 +24,7 @@
 		"lch.ts",
 		"yuv.ts",
 		"ycc.ts",
+		"xyy.ts",
 		"match.ts",
 		"colour.ts",
 		"palette.ts",

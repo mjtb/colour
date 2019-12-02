@@ -13,6 +13,7 @@ import HWB from './hwb';
 import LCH from './lch';
 import YUV from './yuv';
 import YCC from './ycc';
+import XYY from './xyy';
 import Colour from './colour';
 import Palette from './palette';
 import Match from './match';
@@ -31,6 +32,7 @@ export {
 	LCH,
 	YUV,
 	YCC,
+	XYY,
 	Colour,
 	Match,
 	Palette,

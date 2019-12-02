@@ -32,20 +32,21 @@
   },
   "homepage": "https://github.com/mjtb/colour",
   "devDependencies": {
-    "@types/commander": "^2.11.0",
-    "@types/jasmine": "^2.6.0",
+    "@types/commander": "^2.12.2",
+    "@types/jasmine": "^2.8.16",
+    "@types/node": "^12.12.14",
     "@types/pug": "^2.0.4",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-jasmine": "^2.4.2",
     "gulp-jsdoc3": "^1.0.1",
-    "gulp-typescript": "^3.2.2",
-    "jasmine": "^2.8.0",
-    "jsdoc": "^3.5.5",
-    "nyc": "^11.2.1",
-    "typescript": "^2.5.3"
+    "gulp-typescript": "^5.0.1",
+    "jasmine": "^2.99.0",
+    "jsdoc": "^3.6.3",
+    "nyc": "^14.1.1",
+    "typescript": "^2.9.2"
   },
   "dependencies": {
-    "commander": "^2.11.0",
-    "pug": "^2.0.0-rc.4"
+    "commander": "^2.20.3",
+    "pug": "^2.0.4"
   }
 }

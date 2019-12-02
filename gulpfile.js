@@ -32,6 +32,7 @@ gulp.task('doc', function(cb) {
 		'lib/lch.js',
 		'lib/yuv.js',
 		'lib/ycc.js',
+		'lib/xyy.js',
 		'lib/palette.js',
 		'lib/palettes.js'
 	], { read: false }).pipe(jsdoc(cb));

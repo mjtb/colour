@@ -31,7 +31,7 @@ export class DataSet {
 		let col: string[] = [];
 		if(columns === '*') {
 			col = [ 'r', 'p', 'x', '6', '3', 'l', 'r:e', '3:e', 'lin', 'hsl', 'hwb', 'yuv', 'ycc',
-				'xyz', 'lch' ];
+				'xyz', 'lch', 'xyy' ];
 			for(let i: number = 0; i < Palettes.count; ++i) {
 				let p: Palette = Palettes.paletteAt(i);
 				col.push(p.name);
@@ -40,7 +40,7 @@ export class DataSet {
 				col.push(`${p.name}:e`);
 			}
 		} else {
-			let pat: string = '(r|p|x|6|3|l|\\[(?:r\\:e|3\\:e|lin|hsl|hwb|yuv|ycc|xyz|lch';
+			let pat: string = '(r|p|x|6|3|l|\\[(?:r\\:e|3\\:e|lin|hsl|hwb|yuv|ycc|xyz|lch|xyy';
 			for(let i: number = 0; i < Palettes.count; ++i) {
 				let pal: Palette = Palettes.paletteAt(i);
 				pat += `|${pal.name}|${pal.name}\\:e|${pal.name}\\:d|${pal.name}\\:i`;
@@ -148,6 +148,8 @@ export class DataSet {
 					case 'xyz':
 						h.push('xyz(0.25697,0.22525,0.97582)');
 						break;
+					case 'xyy':
+						h.push('xyy(0.17624,0.15449,0.22525)')
 					case 'lch':
 						h.push('lch(53.39 73.36 277.01)');
 						break;
@@ -225,7 +227,10 @@ export class DataSet {
 					case 'lch':
 						h.push('L*C*h\u00B0');
 						break;
-				}
+					case 'xyy':
+						h.push('xyY');
+						break;
+					}
 			}
 			this.header = h;
 		}
@@ -330,7 +335,10 @@ export class DataSet {
 				case 'lch':
 					v.push(colour.lch.toString());
 					break;
-			}
+				case 'xyy':
+					v.push(colour.xyy.toString());
+					break;
+				}
 		}
 		this.content.push(v);
 		this.inputs.push(input);

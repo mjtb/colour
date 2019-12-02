@@ -564,9 +564,9 @@ export default class Palettes {
 	  */
 	public static get userPaletteDir(): string {
 		if(process.platform === 'win32') {
-			return path.resolve(process.env['USERPROFILE'], '.mjtb-colour');
+			return path.resolve(process.env['USERPROFILE'] || '.', '.mjtb-colour');
 		} else {
-			return path.resolve(process.env['HOME'], '.mjtb-colour');
+			return path.resolve(process.env['HOME'] || '.', '.mjtb-colour');
 		}
 	}
 	private static collectPaletteFiles(dirs: string[], paletteFiles: string[], resolve: any, reject: any) {
@@ -581,7 +581,7 @@ export default class Palettes {
 							files = files.filter((f) => f.toLowerCase().endsWith('.palette'));
 							files.sort();
 							for(let f of files) {
-								paletteFiles.push(path.resolve(d, f));
+								paletteFiles.push(path.resolve(d || '.', f));
 							}
 						}
 						Palettes.collectPaletteFiles(dirs, paletteFiles, resolve, reject);
