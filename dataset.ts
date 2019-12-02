@@ -40,13 +40,13 @@ export class DataSet {
 				col.push(`${p.name}:e`);
 			}
 		} else {
-			let pat: string = '(r|p|x|6|3|l|\\[(?:r\\:e|3\\:e|lin|hsl|hwb|yuv|ycc|xyz|lch|xyy';
+			let pat: string = '(\\[(?:r\\:e|3\\:e|r(?:\\.[rgb])?|rgb(?:\\.[rgb])?|srgb(?:\\.[rgb])?|lin(?:\\.[rgb])?|hsl(?:\\.[hsl])?|hwb(?:\\.[hwb])?|yuv(?:\\.[yuv])?|ycc(?:\\.yc|\\.cbc|\\.crc)?|xyz(?:\\.[xyz])?|lch(?:\\.[lch])?|xyy(?:\\.[xy])?';
 			for(let i: number = 0; i < Palettes.count; ++i) {
 				let pal: Palette = Palettes.paletteAt(i);
 				pat += `|${pal.name}|${pal.name}\\:e|${pal.name}\\:d|${pal.name}\\:i`;
 			}
-			pat += ')\\])';
-			let re: RegExp = new RegExp(pat, 'g');
+			pat += ')\\]|r|p|x|6|3|l)';
+			let re: RegExp = new RegExp(pat, 'gi');
 			let m: any;
 			while(m = re.exec(columns)) {
 				if(!m) {
@@ -183,7 +183,24 @@ export class DataSet {
 						}
 						break;
 					case 'r':
+					case 'rgb':
+					case 'srgb':
 						h.push('sRGB');
+						break;
+					case 'r.r':
+					case 'rgb.r':
+					case 'srgb.r':
+						h.push('R_sRGB');
+						break;
+					case 'r.g':
+					case 'rgb.g':
+					case 'srgb.b':
+						h.push('G_sRGB');
+						break;
+					case 'r.b':
+					case 'rgb.b':
+					case 'srgb.b':
+						h.push('B_sRGB');
 						break;
 					case 'p':
 						h.push('sRGB (%)');
@@ -192,7 +209,17 @@ export class DataSet {
 						h.push('sRGB (Hex)');
 						break;
 					case 'l':
+					case 'lab':
 						h.push('L*a*b*');
+						break;
+					case 'lab.l':
+						h.push('L*');
+						break;
+					case 'lab.a':
+						h.push('a*');
+						break;
+					case 'lab.b':
+						h.push('b*');
 						break;
 					case '6':
 						h.push('#rrggbb');
@@ -209,26 +236,95 @@ export class DataSet {
 					case 'lin':
 						h.push('Linear RGB');
 						break;
+					case 'lin.r':
+						h.push('R_lin');
+						break;
+					case 'lin.g':
+						h.push('G_lin');
+						break;
+					case 'lin.b':
+						h.push('B_lin');
+						break;
 					case 'hsl':
 						h.push('HSL');
+						break;
+					case 'hsl.h':
+						h.push('H_hsl');
+						break;
+					case 'hsl.s':
+						h.push('S_hsl');
+						break;
+					case 'hsl.l':
+						h.push('L_hsl');
 						break;
 					case 'hwb':
 						h.push('HWB');
 						break;
+					case 'hwb.h':
+						h.push('H_hwb');
+						break;
+					case 'hwb.w':
+						h.push('W_hwb');
+						break;
+					case 'hwb.b':
+						h.push('B_hwb');
+						break;
 					case 'yuv':
 						h.push('YUV');
+						break;
+					case 'yuv.y':
+						h.push('Y_yuv');
+						break;
+					case 'yuv.u':
+						h.push('U_yuv');
+						break;
+					case 'yuv.v':
+						h.push('V_yuv');
 						break;
 					case 'ycc':
 						h.push('Yc\′CbcCrc');
 						break;
+					case 'ycc.yc':
+						h.push('Y_Yc\′CbcCrc');
+						break;
+					case 'ycc.cbc':
+						h.push('Cbc_Yc\′CbcCrc');
+						break;
+					case 'ycc.crc':
+						h.push('Crc_Yc\′CbcCrc');
+						break;
 					case 'xyz':
 						h.push('XYZ');
+						break;
+					case 'xyz.x':
+						h.push('X_xyz');
+						break;
+					case 'xyz.y':
+						h.push('Y_xyz');
+						break;
+					case 'xyz.z':
+						h.push('Z_xyz');
 						break;
 					case 'lch':
 						h.push('L*C*h\u00B0');
 						break;
+					case 'lch.l':
+						h.push('L*');
+						break;
+					case 'lch.c':
+						h.push('C*');
+						break;
+					case 'lch.h':
+						h.push('h\u00B0');
+						break;
 					case 'xyy':
 						h.push('xyY');
+						break;
+					case 'xyy.x':
+						h.push('X_xyY');
+						break;
+					case 'xyy.y':
+						h.push('Y_xyY');
 						break;
 					}
 			}
@@ -283,7 +379,24 @@ export class DataSet {
 					}
 					break;
 				case 'r':
+				case 'rgb':
+				case 'srgb':
 					v.push(colour.rgb.toRgbString());
+					break;
+				case 'r.r':
+				case 'rgb.r':
+				case 'srgb.r':
+					v.push(Component.formatNumber(colour.rgb.R));
+					break;
+				case 'r.g':
+				case 'rgb.g':
+				case 'srgb.b':
+					v.push(Component.formatNumber(colour.rgb.G));
+					break;
+				case 'r.b':
+				case 'rgb.b':
+				case 'srgb.b':
+					v.push(Component.formatNumber(colour.rgb.B));
 					break;
 				case 'p':
 					v.push(colour.rgb.toRgbString(true));
@@ -292,7 +405,17 @@ export class DataSet {
 					v.push(colour.rgb.toHexString());
 					break;
 				case 'l':
+				case 'lab':
 					v.push(colour.lab.toString());
+					break;
+				case 'lab.l':
+					v.push(Component.formatNumber(colour.lab.l, LAB.PRECISION));
+					break;
+				case 'lab.a':
+					v.push(Component.formatNumber(colour.lab.a, LAB.PRECISION));
+					break;
+				case 'lab.b':
+					v.push(Component.formatNumber(colour.lab.b, LAB.PRECISION));
 					break;
 				case '6':
 					v.push(colour.rgb.toHexString(true));
@@ -317,26 +440,98 @@ export class DataSet {
 				case 'lin':
 					v.push(colour.lin.toString());
 					break;
+				case 'lin.r':
+					v.push(Component.formatNumber(colour.lin.r, Linear.PRECISION));
+					break;
+				case 'lin.g':
+					v.push(Component.formatNumber(colour.lin.g, Linear.PRECISION));
+					break;
+				case 'lin.b':
+					v.push(Component.formatNumber(colour.lin.b, Linear.PRECISION));
+					break;
 				case 'hsl':
 					v.push(colour.hsl.toString());
+					break;
+				case 'hsl.h':
+					v.push(Component.formatNumber(colour.hsl.H));
+					break;
+				case 'hsl.s':
+					v.push(Component.formatNumber(colour.hsl.S));
+					break;
+				case 'hsl.l':
+					v.push(Component.formatNumber(colour.hsl.L));
 					break;
 				case 'xyz':
 					v.push(colour.xyz.toString());
 					break;
+				case 'xyz.x':
+					v.push(Component.formatNumber(colour.xyz.x, XYZ.PRECISION));
+					break;
+				case 'xyz.y':
+					v.push(Component.formatNumber(colour.xyz.y, XYZ.PRECISION));
+					break;
+				case 'xyz.z':
+					v.push(Component.formatNumber(colour.xyz.z, XYZ.PRECISION));
+					break;
 				case 'hwb':
 					v.push(colour.hwb.toString());
+					break;
+				case 'hwb.h':
+					v.push(Component.formatNumber(colour.hwb.H));
+					break;
+				case 'hwb.h':
+					v.push(Component.formatNumber(colour.hwb.H));
+					break;
+				case 'hwb.w':
+					v.push(Component.formatNumber(colour.hwb.W));
+					break;
+				case 'hwb.b':
+					v.push(Component.formatNumber(colour.hwb.B));
 					break;
 				case 'yuv':
 					v.push(colour.yuv.toString());
 					break;
+				case 'yuv.y':
+					v.push(Component.formatNumber(colour.yuv.Y));
+					break;
+				case 'yuv.u':
+					v.push(Component.formatNumber(colour.yuv.U));
+					break;
+				case 'yuv.v':
+					v.push(Component.formatNumber(colour.yuv.V));
+					break;
 				case 'ycc':
 					v.push(colour.ycc.toString());
+					break;
+				case 'ycc.yc':
+					v.push(Component.formatNumber(colour.ycc.Yc));
+					break;
+				case 'ycc.cbc':
+					v.push(Component.formatNumber(colour.ycc.Cbc));
+					break;
+				case 'ycc.crc':
+					v.push(Component.formatNumber(colour.ycc.Crc));
 					break;
 				case 'lch':
 					v.push(colour.lch.toString());
 					break;
+				case 'lch.l':
+					v.push(Component.formatNumber(colour.lch.l, LAB.PRECISION));
+					break;
+				case 'lch.c':
+					v.push(Component.formatNumber(colour.lch.c, LAB.PRECISION));
+					break;
+				case 'lch.h':
+					v.push(Component.formatNumber(colour.lch.h, LAB.PRECISION));
+					break;
 				case 'xyy':
 					v.push(colour.xyy.toString());
+					break;
+				case 'xyy.x':
+					v.push(Component.formatNumber(colour.xyy.x, XYZ.PRECISION));
+					break;
+				case 'xyy.y':
+					v.push(Component.formatNumber(colour.xyy.y, XYZ.PRECISION));
 					break;
 				}
 		}
