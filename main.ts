@@ -80,6 +80,7 @@ function match(format: string, template: string|undefined, columns: string, pale
 
 export function main(argv?: string[]): Promise<number> {
 	return new Promise<number>((resolve, reject) => {
+		var cmd: string|undefined = undefined;
 		commander
 			.version('0.0.1')
 			.option('-f, --format <format>', 'Set output format [text, csv, html, flat or json]')
@@ -93,6 +94,7 @@ export function main(argv?: string[]): Promise<number> {
 			.command('convert [colours...]')
 			.description('Converts colours to various colour spaces')
 			.action(function(...args: any[]): void {
+				cmd = 'convert';
 				let options: any = args[args.length - 1].parent;
 				if(options.palette) {
 					Palettes.add(Palette.parseJsonFileSync(path.resolve(process.cwd(), options.palette)));
@@ -115,6 +117,7 @@ export function main(argv?: string[]): Promise<number> {
 			.command('match <palette> [colours...]')
 			.description('Matches colours in the given palette')
 			.action(function(...args: any[]): void {
+				cmd = 'match';
 				let options: any = args[args.length - 1].parent;
 				if(options.palette) {
 					Palettes.add(Palette.parseJsonFileSync(path.resolve(process.cwd(), options.palette)));
@@ -141,6 +144,7 @@ export function main(argv?: string[]): Promise<number> {
 			.command('columns')
 			.description('Prints syntax help for --columns')
 			.action(function(...args: any[]): void {
+				cmd = 'columns';
 				let options: any = args[args.length - 1].parent;
 				if(options.palette) {
 					Palettes.add(Palette.parseJsonFileSync(path.resolve(process.cwd(), options.palette)));
@@ -153,5 +157,8 @@ export function main(argv?: string[]): Promise<number> {
 			 });
 		commander
 			.parse(argv || process.argv);
+		if(!cmd) {
+			commander.help();
+		}
 	});
 }
