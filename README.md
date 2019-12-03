@@ -100,6 +100,7 @@ colour --help
     convert [colours...]          Converts colours to various colour spaces
     match <palette> [colours...]  Matches colours in the given palette
     columns                       Prints syntax help for --columns
+	diff [colours...]             Prints the difference between colours
 ```
 
 The `colours columns` sub-command will show you the different colour
@@ -132,6 +133,11 @@ Column specifications and their meanings:
     css:e  ±5.527                        ΔE*₀₀ (CSS)
 
 ```
+
+You can also specify individual component values e.g., `\[rgb.r\]` or
+`\[ycc.cbc\]` in columns. Note that you cannot specify the `Y`
+component of the xyY colour space as a column: use the equivalent
+`\[xyz.y\]` component, instead.
 
 The ΔE*₀₀ values are the colour difference values computed using the
 (CIEDE2000)[https://en.wikipedia.org/wiki/Color_difference#CIEDE2000]
@@ -181,6 +187,7 @@ lab(80 40 80)
 	Yc′CbcCrc       	 ycc(2374,954,4595)
 	XYZ             	 xyz(0.679819,0.553411,0.083017)
 	L*C*h°          	 lch(80 89.44 63.43)
+	xyY                  xyy(0.516483,0.420446,0.553411)
 	CSS             	 orange
 	CSS (Definition)	 #ffa500
 	CSS (Index)     	 105
@@ -213,6 +220,7 @@ colour convert -f flat -c * "lab(80 40 80)"
         "ycc": "ycc(2374,954,4595)",
         "xyz": "xyz(0.679819,0.553411,0.083017)",
         "lch": "lch(80 89.44 63.43)",
+		"xyy": "xyy(0.516483,0.420446,0.553411)",
         "css": "orange",
         "css:d": "#ffa500",
         "css:i": 105,
@@ -686,3 +694,26 @@ TypeScript. See the `spec/examplespec.ts` file for details. Note that
 in particular the various `parseString` methods return a
 possibly-undefined value \(the Javascript `undefined` value is returned
 when a `parseString` method fails to parse a string\).
+
+## Releases
+
+### v1.1.0
+
+Released 2019-12-03
+
+* Adds the xyY colour space
+* Adds the diff command
+* Updates all dependencies
+
+### v1.0.1
+
+Released 2017-09-13
+
+* Changed package name to mjtb-colour
+* Set default columns for match command to `rxl`
+
+### v1.0.0
+
+Released 2017-09-13
+
+* Initial release

@@ -1,6 +1,6 @@
 {
   "name": "mjtb-colour",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Converts colours between various colour spaces",
   "main": "lib/index.js",
   "scripts": {
