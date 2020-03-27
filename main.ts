@@ -16,6 +16,7 @@ import RGB from './rgb';
 import Linear from './linear';
 import XYZ from './xyz';
 import LAB from './lab';
+import XYY from './xyy';
 import * as ds from './dataset';
 import { stringLiteral } from 'babel-types';
 
@@ -51,6 +52,23 @@ function diff(format: string, template: string|undefined, colours: string[]): nu
 		content.push([ ast, bst, Component.formatNumber(c, 1e-3)]);
 	}
 	let data: ds.DataSet = ds.DataSet.preformatted(headers, content);
+	let formatter: ds.IDataSetFormatter = ds.formatterOf(format, template);
+	console.log(formatter.formatDataSet(data));
+	return 0;
+}
+
+function cct(format: string, template: string|undefined, columns: string, kelvins: string[]): number {
+	let data: ds.DataSet = new ds.DataSet(columns);
+	for(let kelvin of kelvins) {
+		let ks: string = kelvin;
+		if(ks.endsWith('K') || ks.endsWith('k')) {
+			ks = kelvin.substr(0, kelvin.length - 1);
+		}
+		let k: number = Number.parseInt(ks);
+		let x: XYY = XYY.fromCCT(k);
+		let colour: Colour = new Colour(x);
+		data.push(kelvin, colour);
+	}
 	let formatter: ds.IDataSetFormatter = ds.formatterOf(format, template);
 	console.log(formatter.formatDataSet(data));
 	return 0;
@@ -193,6 +211,29 @@ export function main(argv?: string[]): Promise<number> {
 				}).catch((err: any): void => {
 					reject(err)
 				});
+			});
+		commander
+			.command('cct [kelvins...]')
+			.description('Converts corrected colour temperatures in (Kelvin) to colours assuming full luminance')
+			.action(function(...args: any[]): void {
+				cmd = 'cct';
+				let options: any = args[args.length - 1].parent;
+				if(options.palette) {
+					Palettes.add(Palette.parseJsonFileSync(path.resolve(process.cwd(), options.palette)));
+				}
+				Palettes.loadUserPalettes().then(
+					(palettes: Palette[]): void => {
+						resolve(
+							cct(
+								options.format || 'text',
+								options.template,
+								options.columns || '[cct][xyy]rxl',
+								args[0]
+							)
+						);
+					}).catch((err: any): void => {
+						reject(err);
+					});
 			});
 		commander
 			.parse(argv || process.argv);

@@ -31,7 +31,7 @@ export class DataSet {
 		let col: string[] = [];
 		if(columns === '*') {
 			col = [ 'r', 'p', 'x', '6', '3', 'l', 'r:e', '3:e', 'lin', 'hsl', 'hwb', 'yuv', 'ycc',
-				'xyz', 'lch', 'xyy' ];
+				'xyz', 'lch', 'xyy', 'cct' ];
 			for(let i: number = 0; i < Palettes.count; ++i) {
 				let p: Palette = Palettes.paletteAt(i);
 				col.push(p.name);
@@ -40,7 +40,7 @@ export class DataSet {
 				col.push(`${p.name}:e`);
 			}
 		} else {
-			let pat: string = '(\\[(?:r\\:e|3\\:e|r(?:\\.[rgb])?|rgb(?:\\.[rgb])?|srgb(?:\\.[rgb])?|lin(?:\\.[rgb])?|hsl(?:\\.[hsl])?|hwb(?:\\.[hwb])?|yuv(?:\\.[yuv])?|ycc(?:\\.yc|\\.cbc|\\.crc)?|xyz(?:\\.[xyz])?|lch(?:\\.[lch])?|xyy(?:\\.[xy])?';
+			let pat: string = '(\\[(?:r\\:e|3\\:e|r(?:\\.[rgb])?|rgb(?:\\.[rgb])?|srgb(?:\\.[rgb])?|lin(?:\\.[rgb])?|hsl(?:\\.[hsl])?|hwb(?:\\.[hwb])?|yuv(?:\\.[yuv])?|ycc(?:\\.yc|\\.cbc|\\.crc)?|xyz(?:\\.[xyz])?|lch(?:\\.[lch])?|xyy(?:\\.[xy])?|cct';
 			for(let i: number = 0; i < Palettes.count; ++i) {
 				let pal: Palette = Palettes.paletteAt(i);
 				pat += `|${pal.name}|${pal.name}\\:e|${pal.name}\\:d|${pal.name}\\:i`;
@@ -163,6 +163,9 @@ export class DataSet {
 						h.push('xyy(0.17624,0.15449,0.22525)')
 					case 'lch':
 						h.push('lch(53.39 73.36 277.01)');
+						break;
+					case 'cct':
+						h.push('6702K');
 						break;
 				}
 			}
@@ -336,6 +339,9 @@ export class DataSet {
 						break;
 					case 'xyy.y':
 						h.push('Y_xyY');
+						break;
+					case 'cct':
+						h.push('CCT');
 						break;
 					}
 			}
@@ -543,6 +549,9 @@ export class DataSet {
 					break;
 				case 'xyy.y':
 					v.push(Component.formatNumber(colour.xyy.y, XYZ.PRECISION));
+					break;
+				case 'cct':
+					v.push(Component.formatNumber(colour.xyy.CCT) + 'K');
 					break;
 				}
 		}

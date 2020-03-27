@@ -5,6 +5,7 @@
  */
 import Component from './component';
 import XYZ from './xyz';
+import ColorTemperature from './cct';
 
 /** Defines a colour in CIE XYZ (tristimulus) colour space
   *
@@ -85,5 +86,14 @@ export default class XYY {
 	/** Returns true if this XYZ instance is empty i.e., all components are NaN */
 	public get empty(): boolean {
 		return Number.isNaN(this.x) && Number.isNaN(this.y) && Number.isNaN(this.Y);
+	}
+	/** Get the corrected colour temperature in Kelvin using the McCamy approximation */
+	public get CCT(): number {
+		let n: number = (this.x - 0.3320) / (0.1858 - this.y);
+		return 437 * Math.pow(n, 3) + 3601 * Math.pow(n, 2) + 6861 * n + 5517;
+	}
+	public static fromCCT(kelvin: number, daylight: boolean = false, Y: number = 1): XYY {
+		let ct: ColorTemperature = new ColorTemperature(kelvin);
+		return new XYY(ct.x, daylight ? ct.day : ct.y, Y);
 	}
 }
