@@ -18,6 +18,9 @@ import Colour from './colour';
 import Palette from './palette';
 import Match from './match';
 import Palettes from './palettes';
+import Matrix3x3 from './matrix3x3';
+import Matrix3x1 from './matrix3x1';
+import ColorTemperature from './cct';
 
 export default Colour;
 
@@ -36,5 +39,8 @@ export {
 	Colour,
 	Match,
 	Palette,
-	Palettes
+	Palettes,
+	Matrix3x3,
+	Matrix3x1,
+	ColorTemperature
 };

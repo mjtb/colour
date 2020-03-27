@@ -1,4 +1,9 @@
-const temperatures: {x: number; y: number, day: number}[] = [
+import Matrix3x3 from './matrix3x3';
+import Matrix3x1 from './matrix3x1';
+import XYY from './xyy';
+import XYZ from './xyz';
+
+const temperatures: {x: number, y: number, day: number}[] = [
 { x: 0.652750055750174, y: 0.344462227197370,  day: 0.344462227197370 },
 { x: 0.652608822236564, y: 0.344587439057505,  day: 0.344587439057505 },
 { x: 0.652467612975944, y: 0.344712559066370,  day: 0.344712559066370 },
@@ -19004,16 +19009,125 @@ const temperatures: {x: number; y: number, day: number}[] = [
 
 /** Defines the colour coordinates of a blackbody radiator */
 export default class ColorTemperature {
+    /** Blackbody CCT in Kelvin */
+    public readonly k: number;
     /** Blackbody x coordinate in CIE 1931 xyY colour space */
     public readonly x: number;
     /** Blackbody x coordinate in CIE 1931 xyY colour space */
     public readonly y: number;
     /** Daylight y coordinate in CIE 1931 xyY colour space */
     public readonly day: number;
-    constructor(kelvin: number) {
-        let t = temperatures[Math.max(0, Math.min(temperatures.length - 1, kelvin - 1000))];
-        this.x = t.x;
-        this.y = t.y;
-        this.day = t.day;
+    constructor(arg: number|XYZ) {
+        if(arg instanceof XYZ) {
+            let xyz: XYZ = arg;
+            let xyy: XYY = XYY.fromXYZ(xyz);
+            this.x = xyy.x;
+            this.y = xyy.y;
+            if(this.x == 0.3217 && this.y == 0.329 && xyy.Y == 1) {
+                this.k = 6504;
+                this.day = 0.329;
+                return;
+            }
+            const rt:number[] = [
+                Number.MIN_VALUE,  10.0e-6,  20.0e-6,  30.0e-6,  40.0e-6,  50.0e-6,
+                60.0e-6,  70.0e-6,  80.0e-6,  90.0e-6, 100.0e-6, 125.0e-6,
+                150.0e-6, 175.0e-6, 200.0e-6, 225.0e-6, 250.0e-6, 275.0e-6,
+                300.0e-6, 325.0e-6, 350.0e-6, 375.0e-6, 400.0e-6, 425.0e-6,
+                450.0e-6, 475.0e-6, 500.0e-6, 525.0e-6, 550.0e-6, 575.0e-6,
+                600.0e-6
+            ];
+            const uvt: {u:number,v:number,t:number}[] = [
+                {u:0.18006, v:0.26352, t:-0.24341},
+                {u:0.18066, v:0.26589, t:-0.25479},
+                {u:0.18133, v:0.26846, t:-0.26876},
+                {u:0.18208, v:0.27119, t:-0.28539},
+                {u:0.18293, v:0.27407, t:-0.30470},
+                {u:0.18388, v:0.27709, t:-0.32675},
+                {u:0.18494, v:0.28021, t:-0.35156},
+                {u:0.18611, v:0.28342, t:-0.37915},
+                {u:0.18740, v:0.28668, t:-0.40955},
+                {u:0.18880, v:0.28997, t:-0.44278},
+                {u:0.19032, v:0.29326, t:-0.47888},
+                {u:0.19462, v:0.30141, t:-0.58204},
+                {u:0.19962, v:0.30921, t:-0.70471},
+                {u:0.20525, v:0.31647, t:-0.84901},
+                {u:0.21142, v:0.32312, t:-1.0182},
+                {u:0.21807, v:0.32909, t:-1.2168},
+                {u:0.22511, v:0.33439, t:-1.4512},
+                {u:0.23247, v:0.33904, t:-1.7298},
+                {u:0.24010, v:0.34308, t:-2.0637},
+                {u:0.24792, v:0.34655, t:-2.4681},	/* Note: 0.24792 is a corrected value for the error found in W&S as 0.24702 */
+                {u:0.25591, v:0.34951, t:-2.9641},
+                {u:0.26400, v:0.35200, t:-3.5814},
+                {u:0.27218, v:0.35407, t:-4.3633},
+                {u:0.28039, v:0.35577, t:-5.3762},
+                {u:0.28863, v:0.35714, t:-6.7262},
+                {u:0.29685, v:0.35823, t:-8.5955},
+                {u:0.30505, v:0.35907, t:-11.324},
+                {u:0.31320, v:0.35968, t:-15.628},
+                {u:0.32129, v:0.36011, t:-23.325},
+                {u:0.32931, v:0.36038, t:-40.770},
+                {u:0.33724, v:0.36051, t:-116.45}
+            ];
+            if ((xyz.x >= 1.0e-20) || (xyz.y >= 1.0e-20) || (xyz.z >= 1.0e-20)) {
+                let us: number, vs: number, p: number, di: number, dm: number;
+                let i: number;
+                us = (4.0 * xyz.x) / (xyz.x + 15.0 * xyz.y + 3.0 * xyz.z);
+                vs = (6.0 * xyz.y) / (xyz.x + 15.0 * xyz.y + 3.0 * xyz.z);
+                dm = 0.0;
+                for (i = 0; i < 31; i++) {
+                    di = (vs - uvt[i].v) - uvt[i].t * (us - uvt[i].u);
+                    if ((i > 0) && (((di < 0.0) && (dm >= 0.0)) || ((di >= 0.0) && (dm < 0.0)))) {
+                        di = di / Math.sqrt(1.0 + uvt[i    ].t * uvt[i    ].t);
+                        dm = dm / Math.sqrt(1.0 + uvt[i - 1].t * uvt[i - 1].t);
+                        p = dm / (dm - di);     /* p = interpolation parameter, 0.0 : i-1, 1.0 : i */
+                        let LERP: (a:number,b:number,c:number) => number = function(a: number,b : number,c: number) {
+                            return(((b) - (a)) * (c) + (a));
+                        };
+                        p = 1.0 / (LERP(rt[i - 1], rt[i], p));
+                        this.k = p;
+                        let t = temperatures[Math.max(0, Math.min(temperatures.length - 1, Math.round(p - 1000)))];
+                        this.day = t.day;
+                        return;
+                    }
+                    dm = di;
+                }
+            }
+            this.k = Number.NaN;
+            this.day = Number.NaN;
+        } else {
+            let kelvin: number = arg;
+            this.k = kelvin;
+            if(kelvin == 6504) {
+                this.x = 0.3127;
+                this.y = 0.329;
+                this.day = 0.329;
+            } else {
+                let t = temperatures[Math.max(0, Math.min(temperatures.length - 1, Math.round(kelvin - 1000)))];
+                this.x = t.x;
+                this.y = t.y;
+                this.day = t.day;
+            }
+        }
     }
+    public static readonly Bradford : Matrix3x3 = new Matrix3x3([
+        [  0.8951000,  0.2664000, -0.1614000 ],
+        [ -0.7502000,  1.7135000,  0.0367000 ],
+        [  0.0389000, -0.0685000,  1.0296000 ]       
+    ]);
+    public static readonly InverseBradford : Matrix3x3 = new Matrix3x3([
+        [  0.9869929, -0.1470543,  0.1599627 ],
+        [  0.4323053,  0.5183603,  0.0492912 ],
+        [ -0.0085287,  0.0400428,  0.9684867 ]       
+    ]);
+    public static adapt(src : XYZ, dest : XYZ) : Matrix3x3 {
+        let s : Matrix3x1 = src.matrix.multiply(ColorTemperature.Bradford);
+        let d : Matrix3x1 = dest.matrix.multiply(ColorTemperature.Bradford);
+        let cone : Matrix3x3 = new Matrix3x3([
+            [ d.r1c1 / s.r1c1, 0, 0 ],
+            [ 0, d.r2c1 / s.r2c1, 0 ],
+            [ 0, 0, d.r3c1 / s.r3c1 ]
+        ]);
+        return ColorTemperature.Bradford.multiply(cone.multiply(ColorTemperature.InverseBradford));
+    } 
 };

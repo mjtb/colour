@@ -17,6 +17,8 @@ import Linear from './linear';
 import XYZ from './xyz';
 import LAB from './lab';
 import XYY from './xyy';
+import Matrix3x3 from './matrix3x3';
+import ColorTemperature from './cct';
 import * as ds from './dataset';
 import { stringLiteral } from 'babel-types';
 
@@ -68,6 +70,32 @@ function cct(format: string, template: string|undefined, columns: string, kelvin
 		let x: XYY = XYY.fromCCT(k);
 		let colour: Colour = new Colour(x);
 		data.push(kelvin, colour);
+	}
+	let formatter: ds.IDataSetFormatter = ds.formatterOf(format, template);
+	console.log(formatter.formatDataSet(data));
+	return 0;
+}
+
+function adapt(format: string, template: string|undefined, columns: string, srcin: string, destin: string, colours: string[]): number {
+	let data: ds.DataSet = new ds.DataSet(columns);
+	let src: Colour|undefined = Palettes.parseString(srcin);
+	if(!src) {
+		throw new Error(`Could not parse ${srcin} as a colour`);
+	}
+	let dest: Colour|undefined = Palettes.parseString(destin);
+	if(!dest) {
+		throw new Error(`Could not parse ${destin} as a colour`);
+	}
+	let m : Matrix3x3 = ColorTemperature.adapt(src.xyz, dest.xyz);
+	for(let c of colours) {
+		let cs: string = c;
+		let cc: Colour|undefined = Palettes.parseString(cs);
+		if(!cc) {
+			throw new Error(`Could not parse ${cs} as a colour`);
+		}
+		let t: XYZ = cc.xyz.multiply(m);
+		let tc: Colour = new Colour(t);
+		data.push(c, tc);
 	}
 	let formatter: ds.IDataSetFormatter = ds.formatterOf(format, template);
 	console.log(formatter.formatDataSet(data));
@@ -229,6 +257,31 @@ export function main(argv?: string[]): Promise<number> {
 								options.template,
 								options.columns || '[cct][xyy]rxl',
 								args[0]
+							)
+						);
+					}).catch((err: any): void => {
+						reject(err);
+					});
+			});
+		commander
+			.command('adapt src dest [colours...]')
+			.description('Chromatic adaptation of one or more source colours given the source reference white point and the destination reference white point')
+			.action(function(...args: any[]): void {
+				cmd = 'adapt';
+				let options: any = args[args.length - 1].parent;
+				if(options.palette) {
+					Palettes.add(Palette.parseJsonFileSync(path.resolve(process.cwd(), options.palette)));
+				}
+				Palettes.loadUserPalettes().then(
+					(palettes: Palette[]): void => {
+						resolve(
+							adapt(
+								options.format || 'text',
+								options.template,
+								options.columns || '[xyy]l',
+								args[0][0],
+								args[0][1],
+								args[0].slice(2)
 							)
 						);
 					}).catch((err: any): void => {

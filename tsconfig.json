@@ -18,6 +18,7 @@
 		"linear.ts",
 		"hsl.ts",
 		"matrix3x3.ts",
+		"matrix3x1.ts",
 		"xyz.ts",
 		"lab.ts",
 		"hwb.ts",

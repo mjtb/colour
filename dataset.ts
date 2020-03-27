@@ -12,6 +12,7 @@ import Match from './match';
 import LAB from './lab';
 import XYZ from './xyz';
 import Linear from './linear';
+import ColorTemperature from './cct';
 
 export class DataSet {
 	public columns: string[];
@@ -551,7 +552,7 @@ export class DataSet {
 					v.push(Component.formatNumber(colour.xyy.y, XYZ.PRECISION));
 					break;
 				case 'cct':
-					v.push(Component.formatNumber(colour.xyy.CCT) + 'K');
+					v.push(Component.formatNumber(new ColorTemperature(colour.xyz).k) + 'K');
 					break;
 				}
 		}

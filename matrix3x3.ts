@@ -40,4 +40,17 @@ export default class Matrix3x3 {
 	}
 	/** The identity matrix i.e., has 1 along the diagnal and 0 everywhere else */
 	public static readonly IDENTITY: Matrix3x3 = new Matrix3x3([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]);
+	public multiply(m : Matrix3x3) : Matrix3x3 {
+		return new Matrix3x3([
+			[ m.r1c1 * this.r1c1 + m.r1c2 * this.r2c1 + m.r1c3 * this.r3c1,
+			  m.r1c1 * this.r1c2 + m.r1c2 * this.r2c2 + m.r1c3 * this.r3c2,
+			  m.r1c1 * this.r1c3 + m.r1c2 * this.r2c3 + m.r1c3 * this.r3c3 ],
+			[ m.r2c1 * this.r1c1 + m.r2c2 * this.r2c1 + m.r2c3 * this.r3c1, 
+			  m.r2c1 * this.r1c2 + m.r2c2 * this.r2c2 + m.r2c3 * this.r3c2,
+			  m.r2c1 * this.r1c3 + m.r2c2 * this.r2c3 + m.r2c3 * this.r3c3 ],
+			[ m.r3c1 * this.r1c1 + m.r3c2 * this.r2c1 + m.r3c3 * this.r3c1,
+			  m.r3c1 * this.r1c2 + m.r3c2 * this.r2c2 + m.r3c3 * this.r3c2,
+			  m.r3c1 * this.r1c3 + m.r3c2 * this.r2c3 + m.r3c3 * this.r3c3 ]
+		]);
+	}
 };

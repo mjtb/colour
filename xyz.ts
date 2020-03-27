@@ -6,6 +6,7 @@
 import Component from './component';
 import Linear from './linear';
 import Matrix3x3 from './matrix3x3';
+import Matrix3x1 from './matrix3x1';
 
 /** Defines a colour in CIE XYZ (tristimulus) colour space
   *
@@ -64,6 +65,14 @@ export default class XYZ {
 		} else {
 			return undefined;
 		}
+	}
+	/** Gets this colour as a 3x1 matrix */
+	public get matrix() : Matrix3x1 {
+		return new Matrix3x1([
+			this.x,
+			this.y,
+			this.z
+		]);
 	}
 	/** Formats this colour as a string in xyz(x,y,z) format
 	  * @param {number} precision - decimal place value to which components will be formatted
